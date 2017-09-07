@@ -7,3 +7,5 @@ navbar:
       href: index.html
     - text: "AdventureTime"
       href: donut.html
+    - text: "Up Dog"
+      href: doggiedogworld.html

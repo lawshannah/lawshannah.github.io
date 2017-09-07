@@ -1,0 +1,7 @@
+name: "my-websitedotorg"
+output_dir: "."
+navbar:
+  title: "TheMoreYouKnowDotedu"
+  left:
+    - text: "Homebase"
+      href: index.html

@@ -1,0 +1,9 @@
+---
+title: "PeaceOfMind"
+author: "SixthSense"
+date: "9/7/2017"
+output: html_document
+---
+##Guide through the Unknown
+
+The internet is a crazy place to both experience and yet not be in.

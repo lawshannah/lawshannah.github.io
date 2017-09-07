@@ -5,3 +5,5 @@ navbar:
   left:
     - text: "Homebase"
       href: index.html
+    - text: "AdventureTime"
+      href: donut.html

@@ -6,3 +6,7 @@ output: html_document
 ---
 ##HelloWorld :D
 Computers are fun!
+
+```{r, echo = FALSE}
+knitr::include_graphics("./img/maxresdefault.jpg")
+```

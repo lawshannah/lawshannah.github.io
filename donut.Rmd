@@ -6,4 +6,8 @@ output: html_document
 ---
 ##Guide through the Unknown
 
+```{r, echo = FALSE}
+knitr::include_graphics("./img/beanSprout.jpeg")
+```
+
 The internet is a crazy place to both experience and yet not be in.

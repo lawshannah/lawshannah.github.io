@@ -1,0 +1,45 @@
+---
+title: "Untitled"
+author: "Hannah Xiao Si Laws"
+date: "10/31/2017"
+output: html_document
+---
+
+```{r setup, eval = FALSE, include=FALSE}
+Ver <- read.csv("http://www1.appstate.edu/~arnholta/Data/Verizon.csv")
+head(Ver)
+
+library(tidyverse)
+
+ggplot(Ver, aes(x = Time)) + 
+  geom_histogram() + 
+  facet_grid(.~Group)
+
+ggplot(Ver, aes(x = Time, fill = Group)) + 
+  geom_density() + 
+  facet_grid(.~Group) + 
+  scale_fill_manual(values = c("pink", "lightblue")) + 
+  guides(fill = FALSE) + 
+  geom_vline(linetype = "dashed")
+
+
+
+
+
+Vera <- Ver%>%
+  group_by(Group) %>%
+  summarize(Q3 = quantile(Time, prob = 0.75))
+
+
+  ggplot(data = Ver, aes(x = Time, fill = Group)) + 
+  geom_density() + 
+  facet_grid(.~Group) + 
+  scale_fill_manual(values = c("pink", "lightblue")) +
+    theme_bw() + 
+  guides(fill = FALSE) + 
+  geom_vline(aes(xintercept = Q3), linetype = "dashed", data = Vera)
+```
+
+
+
+

@@ -12,4 +12,7 @@ navbar:
     - text: "Cycle Sharing Project"
       href: CycleShareProj/CycleSharingProj.html
       
-      
+output:
+  html_document:
+    theme: yeti
+    highlight: tango

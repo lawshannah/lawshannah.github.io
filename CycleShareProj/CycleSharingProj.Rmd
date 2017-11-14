@@ -233,7 +233,7 @@ Trip_Duration_Month %>%
 ```
 
 #Number of Trips by Day of Week
-```{r, eval = FALSE, label = "dayOfWeekSeasons", fig.align='center'}
+```{r, eval = TRUE, label = "dayOfWeekSeasons", fig.align='center'}
 start_date_ym %>%
   group_by(wd, Season) %>%
   summarize(N = n())%>%
@@ -245,37 +245,71 @@ start_date_ym %>%
 ```
 
 
-
-```{r, echo = FALSE, eval=FALSE, label = "timeOfDaySeasons", fig.cap="Number of Trips by Time of Day"}
 #Number of Trips Per Time of Day
+```{r, echo = FALSE, eval=TRUE, label = "timeOfDaySeasons", fig.cap="Number of Trips by Time of Day"}
 
-start_date_ym%>%
-  group_by(starttime, wd, Season)%>%
+trip_2 %>%
+  mutate(ym = paste(year(start_date), 
+                    month(start_date), sep = "/"), Season = ifelse(ym %in% c("2014/10", "2014/11"), "Fall",
+                                                            ifelse(ym %in% c("2014/12", "2015/1", "2015/2"),
+                                                                   "Winter",
+                                                            ifelse(ym %in% c("2015/3", "2015/4", "2015/5"),
+                                                                   "Spring", "Summer")))) %>%
+  group_by(Hour = hour(start_dt), Season, wd) %>%
   summarize(N = n()) %>%
-  ggplot(aes(x = starttime, y= N, col = Season, fill = Season, group = Season)) +
+ ggplot(aes(x = Hour, y= N, color = Season, group = Season)) +
   geom_point() +
-  geom_line() +
-  theme_bw() + 
-  facet_wrap(~wd, ncol = 2) + 
+  geom_line() + 
+  facet_wrap(~wd) + 
+  theme_bw()
   labs(x = "Hour of Day", y = "Number of Trips")
 ```
 
+#Number of Trips by Member Type
+```{r, echo = FALSE, eval = FALSE}
+trip_2 %>%
+  mutate(ym = paste(year(start_date), 
+                    month(start_date), sep = "/"), Season = ifelse(ym %in% c("2014/10", "2014/11"), "Fall",
+                                                            ifelse(ym %in% c("2014/12", "2015/1", "2015/2"),
+                                                                   "Winter",
+                                                            ifelse(ym %in% c("2015/3", "2015/4", "2015/5"),
+                                                                   "Spring", "Summer")))) %>%
+  filter(usertype !="")%>%
+  group_by(Season, usertype, ym) %>%
+  summarize(N = n())%>%
+  ggplot(aes(x = ym, y = N, color = Season, group = usertype, fill = usertype)) + 
+  geom_point(aes(shape = usertype, size = 2)) + 
+  geom_line() + 
+  theme_bw() + 
+  labs(x = "Date", y= "Total Number of Trips Per Month")
 
-```{r, eval = FALSE, echo = FALSE}
+```
+
+
 #Trip Duration by Member Type
-trip_cost <- trip_2 %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0, 
-                                      ifelse(usertype == "Member" & tripduration_m >45 & tripduration_m <= 75, 2, 
-                                      ifelse(usertype == "Member" & tripduration_m > 75, (2 + 2 * ((tripduration_m - 75)/30 #*ALERT NEEDS TO BE CHANGED*)),
-                                      ifelse(usertype == "Short-Term Pass Holder" & tripduration_m <= 30, 0, 
-                                      ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 30 & tripduration_m < 60, 2, 
-                                      ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 60, 
-                                             (2 + 5 * ((tripduration_m - 60)/30)), NA #any extra overage is $5, needs to be fixed)))))))
+```{r, eval = FALSE, echo = FALSE}
+# tripduration_m <- start_date_ym$tripduration
+# 
+# trip_cost <- trip_2 %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0, 
+#                                       ifelse(usertype == "Member" & tripduration_m >45 & tripduration_m <= 75, 2, 
+#                                       ifelse(usertype == "Member" & tripduration_m > 75, (2 + 2 * ((tripduration_m - 75)/30)), #*ALERT NEEDS TO BE CHANGED*)),
+#                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m <= 30, 0, 
+#                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 30 & tripduration_m < 60, 2, 
+#                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 60, 
+#                                              (2 + 5 * ((tripduration_m - 60)/30)), NA))))))) #any extra overage is $5, needs to be fixed)))))))
 
                                         
 #attempt to make member vs. short term pass holder side by side graph
-ggplot(trip_cost, aes(x = usertype)) + facet_grid(cost~.)
-
-# start_date_ym <- start_date_ym %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45,0, ifelse(usertype= "Member" & tripduration_m > 45 & tripduration_m <= 75, 2, ifelse(usertype = "Member" & tripduration_m > 75, (2+2 * ceiling(tripduration_m -75)/30, ifelse(usertype = "Short-Term Passholder" & tripduration_m <= 30,0 ifelse(usertype == "Short-Term Passholder"))))))
+# ggplot(trip_cost, aes(x = usertype)) + facet_grid(cost~.)
+start_date_ym %>%
+  filter(usertype !="")%>%
+  ggplot(aes(x = tripduration, fill = usertype))+
+  geom_histogram() +
+  facet_grid(.~ usertype) + 
+  scale_fill_manual(values = c("pink", "light blue")) +
+  theme_bw() +
+  guides(fill = FALSE) +
+  geom_vline(aes(xintercept = quantile(tripduration, prob = 0.75)), linetype = "dashed", data = start_date_ym)
 ```
 
 

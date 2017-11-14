@@ -266,7 +266,7 @@ trip_2 %>%
 ```
 
 #Number of Trips by Member Type
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = TRUE, eval = FALSE}
 trip_2 %>%
   mutate(ym = paste(year(start_date), 
                     month(start_date), sep = "/"), Season = ifelse(ym %in% c("2014/10", "2014/11"), "Fall",
@@ -287,7 +287,7 @@ trip_2 %>%
 
 
 #Trip Duration by Member Type
-```{r, eval = FALSE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE}
 # tripduration_m <- start_date_ym$tripduration
 # 
 # trip_cost <- trip_2 %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0, 

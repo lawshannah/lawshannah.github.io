@@ -53,7 +53,7 @@ weather <- read.csv(file = "weather.csv", header = TRUE, stringsAsFactors = FALS
 ## **Station Locations**
 Lets take a look at where the rental stations are located in Seattle and a quick peek at where they are located!  
 
-```{r, echo = FALSE, message = FALSE, label = "stationLocs", fig.align='center', results='hide'}
+```{r, echo = FALSE, message = FALSE, label = "stationLocs", fig.align='center', fig.cap="Stations map", results='hide'}
 #For show (the graphs , THE EVI-DANCE) Formating the dates
 station$install_date <- mdy(station$install_date)
 
@@ -91,7 +91,7 @@ Look at all those stations! Its hard to believe they managed to go out of busine
 
 ##**Station Installations**
 
-```{r, label = "currentDockCountHist", fig.align='center', echo = FALSE}
+```{r, label = "currentDockCountHist", fig.align='center', fig.cap="Stations with Bikes", echo = FALSE}
 #histogram showing current dock count
 ggplot(data = station, aes (x = current_dockcount)) +
   geom_bar(fill = "pink", color = "black") +
@@ -105,7 +105,7 @@ Well that’s weird, some of the stations have a dock count of 0. I’m assuming
 
 #Change in Number of Bike Docks Per Station
 Any stations with no change in number of docks are not shown here.
-```{r, label = "bikesPerStation", fig.align = 'center', warning = FALSE, message = FALSE}
+```{r, label = "bikesPerStation", fig.align = 'center',fig.cap="Bike Change per Station" , warning = FALSE, message = FALSE}
 dock_change <- station %>% 
                group_by(station_id) %>% 
                select(station_id, long, lat, ends_with("dockcount")) %>% 
@@ -126,7 +126,7 @@ Wow! Looks like quite a few stations took away bike docks and none gained any. P
 
 #Current Station Size
 I’m going to take one quick look at the current size of each station before moving on to the next dataset. Note: I did not include any stations that were closed as of August 31, 2016 in this map
-```{r, echo = FALSE, label = "currentStationSize",fig.align='center', warning = FALSE, message = FALSE}
+```{r, echo = FALSE, label = "currentStationSize",fig.align='center', fig.cap="Station Size", warning = FALSE, message = FALSE}
 currDockSize <- station %>% 
                group_by(station_id) %>% 
                select(station_id, long, lat, ends_with("dockcount")) %>% 
@@ -211,7 +211,7 @@ start_date_ym %>%
 #Average Trip Duration
 Great! I wonder how the average trip duration fluctuates over this time period.  
 Now to plot the average trip duration (in minutes) (plus or minus standard error), with colors indicating season.
-```{r, label = "minutesSeason", fig.align='center'}
+```{r, label = "minutesSeason", fig.align='center', fig.cap="Average Trip Duration"}
 Trip_Duration_Month <- start_date_ym %>% 
   mutate(trip_duration_min = tripduration/60) %>% 
   group_by(ym) %>% 
@@ -233,7 +233,7 @@ Trip_Duration_Month %>%
 ```
 
 #Number of Trips by Day of Week
-```{r, eval = TRUE, label = "dayOfWeekSeasons", fig.align='center'}
+```{r, eval = TRUE, label = "dayOfWeekSeasons", fig.cap="Trips during the week", fig.align='center'}
 start_date_ym %>%
   group_by(wd, Season) %>%
   summarize(N = n())%>%
@@ -246,7 +246,7 @@ start_date_ym %>%
 
 
 #Number of Trips Per Time of Day
-```{r, echo = FALSE, eval=TRUE, label = "timeOfDaySeasons", fig.cap="Number of Trips by Time of Day"}
+```{r, echo = FALSE, label = "timeOfDaySeasons", fig.cap="Number of Trips by Time of Day", fig.align='center', warning=FALSE, message=FALSE}
 
 trip_2 %>%
   mutate(ym = paste(year(start_date), 
@@ -266,7 +266,7 @@ trip_2 %>%
 ```
 
 #Number of Trips by Member Type
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval = TRUE, fig.cap="Trips by Different Member Type", fig.align='center'}
 trip_2 %>%
   mutate(ym = paste(year(start_date), 
                     month(start_date), sep = "/"), Season = ifelse(ym %in% c("2014/10", "2014/11"), "Fall",
@@ -287,7 +287,7 @@ trip_2 %>%
 
 
 #Trip Duration by Member Type
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, fig.cap="Trip Duration by Member Type", fig.align='center'}
 # tripduration_m <- start_date_ym$tripduration
 # 
 # trip_cost <- trip_2 %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0, 
@@ -309,7 +309,7 @@ start_date_ym %>%
   scale_fill_manual(values = c("pink", "light blue")) +
   theme_bw() +
   guides(fill = FALSE) +
-  geom_vline(aes(xintercept = quantile(tripduration, prob = 0.75)), linetype = "dashed", data = start_date_ym)
+  geom_vline(aes(xintercept = quantile(tripduration, prob = 0.75)), linetype = "dashed")
 ```
 
 

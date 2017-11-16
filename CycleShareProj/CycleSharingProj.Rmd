@@ -303,23 +303,39 @@ trip_2 %>%
 # ggplot(trip_cost, aes(x = usertype)) + facet_grid(cost~.)
 start_date_ym %>%
   filter(usertype !="")%>%
-  ggplot(aes(x = tripduration, fill = usertype))+
+  ggplot(aes(x = tripduration/60, fill = usertype))+
   geom_histogram() +
+  xlim(1,100)+
   facet_grid(.~ usertype) + 
   scale_fill_manual(values = c("pink", "light blue")) +
   theme_bw() +
   guides(fill = FALSE) +
-  geom_vline(aes(xintercept = quantile(tripduration, prob = 0.75)), linetype = "dashed")
+  geom_vline(aes(xintercept = quantile(tripduration/60, prob = 0.75)), linetype = "dashed")
 ```
 
 
-```{r, eval = FALSE, echo = FALSE}
-#Members Demographic
+
+##Member Demographics
+```{r, eval=TRUE, fig.cap = "Age Demographic of Members", fig.align='center',  message = FALSE, warnings = FALSE, echo = FALSE}
+
 trip_2$usertype <- as.factor(trip_2$usertype)
 trip_age <- trip_2 %>% mutate(age = year(start_dt) - birthyear)
 
 hist(trip_age$age, main = "Member Age", xlab = "Number of Riders", 
-     col = "#56B4E9", breaks = 25)
+    col = "light blue", breaks = 25)
+
+```
+
+```{r, eval = FALSE, echo = FALSE}
+# #Members Demographic
+# trip_2$usertype <- as.factor(trip_2$usertype)
+# trip_age <- trip_2 %>% mutate(age = year(start_dt) - birthyear)
+# 
+# hist(trip_age$age, main = "Member Age", xlab = "Number of Riders", 
+#      col = "#56B4E9", breaks = 25)
+
+
+
 
 
 

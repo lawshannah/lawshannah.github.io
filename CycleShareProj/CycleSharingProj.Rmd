@@ -1,15 +1,15 @@
 ---
 title: "Seattle's Cycle Sharing Analysis"
 author: ""
-output: html_document
+output: bookdown::html_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', warning = FALSE, message = FALSE)
 # Contributions by Hannah Xiao Si Laws, Sammy Pshyk, Megan Gillis
 ```
 
-##**Introduction**
+#**Introduction**
 This report and analysis on Seattle's bicycle sharing trends. The data includes weather reports for the area, the station locations, and trips taken by cycle riders. Future explorations could include the addition of other forms of public transportation for the Seatle area to better understand commuter travel trends. We also hope to use this report to make a good grade in the fabulous Dr. Arnholt's Stats 3530 Data Science class.
 
 
@@ -19,7 +19,7 @@ We find the orignal information [here](https://proquestionasker.github.io/projec
 This is an exploration of bicycle-sharing data in the city of Seattle, WA (USA) from October 2014 - August 2016. I hope to eventually combine this data with other forms of ride-sharing and transportation in the city, but this will be the first step.
 
 Time to get started!  
-#**Loading Necessary Packages and Importing Data**
+##**Loading Necessary Packages and Importing Data**
 ```{r, warning = FALSE, message = FALSE}
 #loading data
 
@@ -50,10 +50,10 @@ weather <- read.csv(file = "weather.csv", header = TRUE, stringsAsFactors = FALS
 ```
 
 
-## **Station Locations**
-Lets take a look at where the rental stations are located in Seattle and a quick peek at where they are located!  
+# **Station Locations**
+Lets take a look at where the rental stations are located in Seattle and a quick peek at where they are located! 
 
-```{r, echo = FALSE, message = FALSE, label = "stationLocs", fig.align='center', fig.cap="Stations map", results='hide'}
+```{r, echo = FALSE, message = FALSE, label = "stationLocs", fig.cap = "Station Locations", fig.align='center', results='hide'}
 #For show (the graphs , THE EVI-DANCE) Formating the dates
 station$install_date <- mdy(station$install_date)
 
@@ -77,7 +77,7 @@ ggmap(mymap) + geom_point(aes(x = long, y = lat), data = station_locs,
                           alpha = 1, color = "darkred", size = 2)
 ```
 
-So it looks like all of the stations are located near the Lower Queen Anne, Belltown, International District, Capitol Hill and University of Washington areas. Let’s take a more zoomed-in look.
+So it looks like all of the stations are located near the Lower Queen Anne, Belltown, International District, Capitol Hill and University of Washington areas. Let’s take a more zoomed-in look.  Example of looking at reference \@ref(fig:stationLocs).
 ```{r, label = "closeUp", fig.cap= "Stations map Zoomed In", fig.align='center', warning = FALSE, message = FALSE}
 closeUp <- get_map(location = "Seattle", maptype = "roadmap", zoom = 13)
 
@@ -103,7 +103,7 @@ ggplot(data = station, aes (x = current_dockcount)) +
 Well that’s weird, some of the stations have a dock count of 0. I’m assuming they didn’t start that way. Let’s calculate the change in dock count from station installation to August 31, 2016 and plot it on a map.  
 
 
-#Change in Number of Bike Docks Per Station
+##Change in Number of Bike Docks Per Station
 Any stations with no change in number of docks are not shown here.
 ```{r, label = "bikesPerStation", fig.align = 'center',fig.cap="Bike Change per Station" , warning = FALSE, message = FALSE}
 dock_change <- station %>% 
@@ -124,7 +124,7 @@ ggmap(closeUp) +
 
 Wow! Looks like quite a few stations took away bike docks and none gained any. Perhaps those stations weren’t being used very frequently. We’ll have to look at that a bit later.
 
-#Current Station Size
+##Current Station Size
 I’m going to take one quick look at the current size of each station before moving on to the next dataset. Note: I did not include any stations that were closed as of August 31, 2016 in this map
 ```{r, echo = FALSE, label = "currentStationSize",fig.align='center', fig.cap="Station Size", warning = FALSE, message = FALSE}
 currDockSize <- station %>% 
@@ -146,7 +146,7 @@ So it looks like the biggest stations tend to be on the outskirts of the rest. W
 Alright, I’m feeling good about exploring this dataset. Time to check out the trip dataset!
 
 
-##**Exploring the Trips Dataset**
+#**Exploring the Trips Dataset**
 
 Let’s start with the number of trips per day since Pronto! began opening bike stations. To do that, we need to recode our start date/times as POSIXct objects. We’ll use the `lubridate` package to visualize the number of rides per day.
 ```{r, label = "visualRidesPerDay", fig.align = 'center', fig.cap="Time to visualize the number of rides per day", warning = FALSE, message = FALSE}
@@ -208,7 +208,7 @@ start_date_ym %>%
 
 
 
-#Average Trip Duration
+##Average Trip Duration
 Great! I wonder how the average trip duration fluctuates over this time period.  
 Now to plot the average trip duration (in minutes) (plus or minus standard error), with colors indicating season.
 ```{r, label = "minutesSeason", fig.align='center', fig.cap="Average Trip Duration"}
@@ -232,7 +232,7 @@ Trip_Duration_Month %>%
 
 ```
 
-#Number of Trips by Day of Week
+##Number of Trips by Day of Week
 ```{r, eval = TRUE, label = "dayOfWeekSeasons", fig.cap="Trips during the week", fig.align='center'}
 start_date_ym %>%
   group_by(wd, Season) %>%
@@ -245,7 +245,7 @@ start_date_ym %>%
 ```
 
 
-#Number of Trips Per Time of Day
+##Number of Trips Per Time of Day
 ```{r, echo = FALSE, label = "timeOfDaySeasons", fig.cap="Number of Trips by Time of Day", fig.align='center', warning=FALSE, message=FALSE}
 
 trip_2 %>%
@@ -265,8 +265,8 @@ trip_2 %>%
   labs(x = "Hour of Day", y = "Number of Trips")
 ```
 
-#Number of Trips by Member Type
-```{r, echo = TRUE, eval = TRUE, fig.cap="Trips by Different Member Type", fig.align='center'}
+##Number of Trips by Member Type
+```{r, label = "memberAge", echo = FALSE, eval = TRUE, fig.cap="Trips by Different Member Type", fig.align='center'}
 trip_2 %>%
   mutate(ym = paste(year(start_date), 
                     month(start_date), sep = "/"), Season = ifelse(ym %in% c("2014/10", "2014/11"), "Fall",
@@ -286,8 +286,8 @@ trip_2 %>%
 ```
 
 
-#Trip Duration by Member Type
-```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, fig.cap="Trip Duration by Member Type", fig.align='center'}
+##  Trip Duration by Member Type
+```{r, label = "TripDMemType" , eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, fig.cap="Trip Duration by Member Type", fig.align='center'}
 
 
                                         
@@ -307,16 +307,16 @@ start_date_ym %>%
 
 
 ##Additional Fees
-```{r, fig.align='center', fig.cap="Additional Fees by Memeber Type", warning=FALSE, message=FALSE}
+```{r, echo = FALSE, label = "AddFee", fig.align='center', fig.cap="Additional Fees by Memeber Type", warning=FALSE, message=FALSE}
 tripduration_m <- start_date_ym$tripduration
 
 start_date_ym <- start_date_ym %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0,
                                       ifelse(usertype == "Member" & tripduration_m >45 & tripduration_m <= 75, 2,
-                                      ifelse(usertype == "Member" & tripduration_m > 75, (2 + 2 * ((tripduration_m - 75)/30)), #*ALERT NEEDS TO BE CHANGED*)),
+                                      ifelse(usertype == "Member" & tripduration_m > 75, (2 + 2 * ceiling((tripduration_m - 75)/30)),
                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m <= 30, 0,
                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 30 & tripduration_m < 60, 2,
                                       ifelse(usertype == "Short-Term Pass Holder" & tripduration_m > 60,
-                                             (2 + 5 * ((tripduration_m - 60)/30)), NA)))))))
+                                             (2 + 5 * ceiling((tripduration_m - 60)/30)), NA)))))))
 
 
 start_date_ym %>%
@@ -333,7 +333,7 @@ start_date_ym %>%
 
 
 ##Member Demographics
-```{r, eval=TRUE, fig.cap = "Age Demographic of Members", fig.align='center',  message = FALSE, warnings = FALSE, echo = FALSE}
+```{r, label = "MemDemo", eval=TRUE, fig.cap = "Age Demographic of Members", fig.align='center',  message = FALSE, warnings = FALSE, echo = FALSE}
 
 trip_2$usertype <- as.factor(trip_2$usertype)
 trip_age <- trip_2 %>% mutate(age = year(start_dt) - birthyear)

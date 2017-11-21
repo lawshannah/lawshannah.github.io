@@ -1,5 +1,6 @@
 ---
 title: "Seattle's Cycle Sharing Analysis"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: ""
 output: bookdown::html_document2
 ---
@@ -288,28 +289,27 @@ trip_2 %>%
 
 ##  Trip Duration by Member Type
 ```{r, label = "TripDMemType" , eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, fig.cap="Trip Duration by Member Type", fig.align='center'}
-
-
-                                        
-#attempt to make member vs. short term pass holder side by side graph
-# ggplot(trip_cost, aes(x = usertype)) + facet_grid(cost~.)
+library(tidyverse)
+start_date_ym <- mutate(start_date_ym, freelim= ifelse(usertype=="Member", 45, 30))
 start_date_ym %>%
-  filter(usertype !="")%>%
-  ggplot(aes(x = tripduration/60, fill = usertype))+
-  geom_histogram() +
-  xlim(1,100)+
-  facet_grid(.~ usertype) + 
-  scale_fill_manual(values = c("pink", "light blue")) +
-  theme_bw() +
-  guides(fill = FALSE) +
-  geom_vline(aes(xintercept = quantile(tripduration/60, prob = 0.75)), linetype = "dashed")
+  filter(usertype !="") %>%
+  group_by(tripduration, trip_id, usertype, freelim) %>%
+  summarize(N=n()) %>%
+  ggplot(aes(x=tripduration/60, fill=usertype), group=usertype) +
+    geom_histogram(binwidth = 2, show.legend = FALSE) +
+    xlim(1,60) +
+    facet_grid(.~usertype) + 
+    scale_fill_manual(values=c("pink", "light blue")) +
+    theme_bw() +
+    guides(colour=FALSE) +
+    geom_vline(aes(xintercept=freelim), linetype="dashed") +
+    labs(x="Trip Duration (minutes)", y="Number of Trips") 
 ```
 
 
 ##Additional Fees
 ```{r, echo = FALSE, label = "AddFee", fig.align='center', fig.cap="Additional Fees by Memeber Type", warning=FALSE, message=FALSE}
-tripduration_m <- start_date_ym$tripduration
-
+start_date_ym <- mutate(start_date_ym, tripduration_m = tripduration/60)
 start_date_ym <- start_date_ym %>% mutate(cost = ifelse(usertype == "Member" & tripduration_m <= 45, 0,
                                       ifelse(usertype == "Member" & tripduration_m >45 & tripduration_m <= 75, 2,
                                       ifelse(usertype == "Member" & tripduration_m > 75, (2 + 2 * ceiling((tripduration_m - 75)/30)),

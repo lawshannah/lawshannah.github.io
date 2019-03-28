@@ -5,6 +5,8 @@ navbar:
   left:
     - text: "Homebase"
       href: index.html
+    - text: "From Scratch"
+      href: TheNewBeginning/TheFirstOfMany.html
     - text: "AdventureTime"
       href: Other/donut.html
     - text: "Up Dog Bruh"

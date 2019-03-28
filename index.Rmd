@@ -5,7 +5,7 @@ date: "9/7/2017"
 output: html_document
 ---
 ##HelloWorld :D
-Computers are fun!
+Computers are fun! Yay!
 
 ```{r, echo = FALSE}
 knitr::include_graphics("./img/maxresdefault.jpg")

@@ -7,7 +7,7 @@ output: html_document
 ##Guide through the Unknown
 
 ```{r, echo = FALSE}
-knitr::include_graphics("./img/beanSprout.jpeg")
+knitr::include_graphics("https://pbs.twimg.com/profile_images/1608330589/balancenowords.jpg")
 ```
 
 The internet is a crazy place to both experience and yet not be in.

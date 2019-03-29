@@ -15,7 +15,7 @@ navbar:
       href: CycleShareProj/CycleSharingProj.html
     - icon: fa-github fa-lg
       href: https://github.com/lawshx/lawshannah.github.io/ 
-    - text: "Current Projects"
+    - text: "Current Projects!"
       href: https://github.com/lawshx/HXLaws
       
 output:
